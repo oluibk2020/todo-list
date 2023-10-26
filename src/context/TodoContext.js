@@ -6,6 +6,10 @@ const TodoContext = createContext()
 
 export const TodoProvider = ({children}) =>{
      const [todos, setTodo] = useState(todoList);
+     const [text, setText] = useState("");
+     const [typing, setTyping] = useState(false);
+     const [editMode, setEditMode] = useState(false);
+     const [textID, setTextID] = useState()
 
       function deleteHandler(id) {
         if (window.confirm("Are you sure?")) {
@@ -26,6 +30,14 @@ export const TodoProvider = ({children}) =>{
         todos,
         setTodo,
         deleteHandler,
+        text,
+        setText,
+        typing,
+        setTyping,
+        editMode,
+        setEditMode,
+        textID,
+        setTextID
     }
 
 

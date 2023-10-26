@@ -90,6 +90,9 @@ header a{
 .btn-primary {
   background-color: #20423e;
 }
+.btn-edit {
+  background-color: #245b1c;
+}
 
 .btn-secondary {
   background: #6a74ff;

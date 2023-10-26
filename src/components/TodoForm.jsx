@@ -2,17 +2,23 @@ import FormList from "./FormList";
 import FormStats from "./FormStats";
 import Card from "../shared/Card";
 import Button from "../shared/Button";
-import { useState } from "react";
 import { v4 } from "uuid";
 import { motion } from "framer-motion";
 import { useContext } from "react";
 import TodoContext from "../context/TodoContext";
 
 function TodoForm() {
-  const [text, setText] = useState("");
-  const { todos, setTodo } = useContext(TodoContext);
-
-  const [typing, setTyping] = useState(false);
+  const {
+    todos,
+    setTodo,
+    text,
+    setText,
+    typing,
+    setTyping,
+    editMode,
+    setEditMode,
+    textID,
+  } = useContext(TodoContext);
 
   function textHandler(e) {
     setTyping(true);
@@ -24,12 +30,31 @@ function TodoForm() {
 
   function submitHandler(e) {
     e.preventDefault();
+    let obj = { text, id: "" };
 
     if (text.trim() !== "") {
-      let obj = { text: text };
-      obj.id = v4();
-      setTodo([obj, ...todos]);
-      setText("");
+      //if edit mode is true
+      if (editMode) {
+        obj.id = textID;
+
+        const updateTodos = todos.map((todo) => {
+          if (todo.id === obj.id) {
+            return obj;
+          }
+          return todo;
+        });
+
+        setTodo([...updateTodos]);
+        setText("");
+        setEditMode(false);
+      } else {
+        //if editmode is false
+        obj = { text: text, id: v4() };
+        setTodo([obj, ...todos]);
+        setEditMode(false);
+        setText("");
+      }
+
     } else {
       alert("Please enter a Task");
     }
@@ -62,7 +87,9 @@ function TodoForm() {
               placeholder="Write your to do here"
               value={text}
             />
-            <Button>Send</Button>
+            <Button buttonClass={editMode ? "edit" : "primary"}>
+              {editMode ? "Edit" : "Send"}
+            </Button>
           </div>
           <div>{typing ? "you are typing" : null}</div>
         </form>
